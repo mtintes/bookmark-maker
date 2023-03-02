@@ -27,7 +27,7 @@ func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	buildCmd.Flags().StringVarP(&Input, "inputDirectory", "i", ".", "file or directory where input yaml is.")
-	buildCmd.Flags().StringVarP(&Output, "outputDirectory", "o", ".", "root of output directories.")
+	buildCmd.Flags().StringVarP(&Output, "outputDirectory", "o", "output.html", "root of output directories.")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
