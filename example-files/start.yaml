@@ -1,0 +1,50 @@
+links:
+  - id: google
+    name: Google
+    url: https://google.com
+  - id: google-2
+    name: "google 2"
+    url: https://google.com
+  - id: blog
+    name: my blog
+    url: https://anmtblog.com
+  - id: art
+    name: some art
+    url: https://art.com
+
+
+folders:
+  general:
+    byname:
+      bookmarks:
+        - name: thing
+          url: google
+        - google
+      google:
+        a: 
+          - name: dev
+            url: google
+          - google
+        b: 
+          - google-2
+        c: 
+          - google
+      art:
+        a: 
+          - art
+      blog:
+        a: 
+          - blog
+    byother:
+      a:
+        - google
+        - google-2
+        - blog
+        - art
+  test:
+    - art
+  another:
+    test2:
+      - blog
+    test3: 
+      - nope
