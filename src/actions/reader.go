@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/yosssi/gohtml"
 	"gopkg.in/yaml.v3"
 )
 
@@ -23,7 +24,7 @@ type Link struct {
 
 var globalLinks *[]Link
 
-func BuildStructure(inputDirectory string, directoryRoot string) {
+func BuildStructure(inputDirectory string, outputFile string) {
 
 	links, folders, _ := readInput(inputDirectory)
 
@@ -38,11 +39,13 @@ func BuildStructure(inputDirectory string, directoryRoot string) {
 
 	bookmarkFile += addFooter()
 	log.Println("paths")
-	log.Println(bookmarkFile)
+	log.Println(gohtml.Format(bookmarkFile))
 
-	// for _, data := range paths {
-	// 	log.Println(data)
-	// }
+	writefile := []byte(bookmarkFile)
+	err := os.WriteFile(outputFile, writefile, 0644)
+	if err != nil {
+		log.Println("We had trouble writing the file", err)
+	}
 }
 
 func readInput(inputDirectory string) (*[]Link, map[string]interface{}, error) {
