@@ -1,50 +1,64 @@
 links:
-  - id: google
-    name: Google
-    url: https://google.com
-  - id: google-2
-    name: "google 2"
-    url: https://google.com
-  - id: blog
-    name: my blog
-    url: https://anmtblog.com
+  - id: link-1
+    name: link-1
+    url: https://google.com/
+  - id: link-2
+    name: link-2
+    url: https://google.com/
+  - id: link-3
+    name: link-2
+    url: https://google.com/
   - id: art
     name: some art
-    url: https://art.com
+    url: https://art.com/
 
+
+# folders:
+#   general:
+#     byname:
+#       bookmarks:
+#         - name: thing
+#           url: google
+#         - google
+#       google:
+#         a: 
+#           - name: dev
+#             url: google
+#           - google
+#         b: 
+#           - google-2
+#         c: 
+#           - google
+#       art:
+#         a: 
+#           - art
+#       blog:
+#         a: 
+#           - blog
+#     byother:
+#       a:
+#         - google
+#         - google-2
+#         - blog
+#         - art
+#   test:
+#     - art
+#   another:
+#     test2:
+#       - blog
+#     test3: 
+#       - nope
 
 folders:
-  general:
-    byname:
-      bookmarks:
-        - name: thing
-          url: google
-        - google
-      google:
-        a: 
-          - name: dev
-            url: google
-          - google
-        b: 
-          - google-2
-        c: 
-          - google
-      art:
-        a: 
-          - art
-      blog:
-        a: 
-          - blog
-    byother:
-      a:
-        - google
-        - google-2
-        - blog
-        - art
-  test:
-    - art
-  another:
-    test2:
-      - blog
-    test3: 
-      - nope
+  folder 1:
+    - link-1
+    - name: Link 1
+      url: link-1
+  Folder 2:
+    - link-2
+    - name: Link 2
+      url: link-2
+  Folder 3:
+    - link-3
+    - name: Link 3
+      url: link-3

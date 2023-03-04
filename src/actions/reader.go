@@ -87,7 +87,7 @@ func filesToPaths(folders map[string]interface{}) string {
 			log.Println("help")
 			//response += fmt.Sprintf("%s/%s", currentString, key)
 		} else if _, ok := dir.([]interface{}); ok {
-			response += fmt.Sprintf("<DT><H3>%s</H3>", key)
+			response += fmt.Sprintf("<DT><H3 ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</H3>", key)
 
 			response += `
 			<DL><p>
@@ -98,16 +98,18 @@ func filesToPaths(folders map[string]interface{}) string {
 
 			response += generateBookmarks(dir.([]interface{}))
 			response += `
-			</DL><p>`
+			</DL><p>
+			`
 		} else if _, ok := dir.(map[string]interface{}); ok {
-			response += fmt.Sprintf("<DT><H3>%s</H3>", key)
+			response += fmt.Sprintf("<DT><H3 ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</H3>", key)
 
 			response += `
 			<DL><p>
 				`
 			response += filesToPaths(dir.(map[string]interface{}))
 			response += `
-			</DL><p>`
+			</DL><p>
+			`
 		}
 	}
 
@@ -120,7 +122,7 @@ func individualPaths(dir []interface{}) string {
 	for _, data := range dir {
 		log.Println(reflect.TypeOf(data))
 		name, url := lookupLinkName(data.(string))
-		response += fmt.Sprintf("<DT><A HREF=\"%s\">%s</A>\n", url, name)
+		response += fmt.Sprintf("<DT><A HREF=\"%s\" ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</A>\n", url, name)
 		// response += fmt.Sprintf("%s/%s", key, data)
 	}
 
@@ -133,20 +135,19 @@ func addHeader() string {
 		 It will be read and overwritten.
 		 DO NOT EDIT! -->
 	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-	<meta http-equiv="Content-Security-Policy"
-		  content="default-src 'self'; script-src 'none'; img-src data: *; object-src 'none'"></meta>
 	<TITLE>Bookmarks</TITLE>
-	<H1>Bookmarks Menu</H1>
-	
+	<H1>Bookmarks</H1>
 	<DL><p>
-    <DT><H3 ADD_DATE="1589210900" LAST_MODIFIED="1589210900">Bookmarks bar</H3>
+    <DT><H3 ADD_DATE="1589210900" LAST_MODIFIED="1589210900" PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>
+	<DL><p>
 	`
 	//TODO: get rid of the extra bookmarks bar folder
 }
 
 func addFooter() string {
 	return `
-	</DL>
+	</DL><p>
+	</DL><p>
 	`
 }
 
@@ -162,7 +163,7 @@ func generateBookmarks(filesToBookmark []interface{}) string {
 			// log.Println("Is String")
 			// log.Println(bookmark)
 			name, url := lookupLinkName(bookmark.(string))
-			response += fmt.Sprintf("<DT><A HREF=\"%s\">%s</A>\n", url, name)
+			response += fmt.Sprintf("<DT><A HREF=\"%s\" ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</A>\n", url, name)
 		} else if reflect.TypeOf(bookmark).Kind() == reflect.Map {
 			// log.Println("is map string")
 			var name string
@@ -176,7 +177,7 @@ func generateBookmarks(filesToBookmark []interface{}) string {
 				}
 			}
 
-			response += fmt.Sprintf(`<DT><A HREF="%s">%s</A>\n`, url, name)
+			response += fmt.Sprintf("<DT><A HREF=\"%s\" ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</A>", url, name)
 
 		}
 	}
