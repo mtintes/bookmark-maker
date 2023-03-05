@@ -24,5 +24,6 @@ jobs:
           tarBall: true
       - name: check
         run: |
-          tar -xf bookmark-maker/*.tar.gz
+          ls
+          tar -xf *.tar.gz
           ls
