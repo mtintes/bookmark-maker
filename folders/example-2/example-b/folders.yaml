@@ -1,0 +1,13 @@
+folders:
+  folder 1:
+    - link-1
+    - name: Link 1
+      url: link-1
+  Folder 2:
+    - link-2
+    - name: Link 2
+      url: link-2
+  Folder 3:
+    - link-3
+    - name: Link 3
+      url: link-3
