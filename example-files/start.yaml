@@ -13,52 +13,51 @@ links:
     url: https://art.com/
 
 
-# folders:
-#   general:
-#     byname:
-#       bookmarks:
-#         - name: thing
-#           url: google
-#         - google
-#       google:
-#         a: 
-#           - name: dev
-#             url: google
-#           - google
-#         b: 
-#           - google-2
-#         c: 
-#           - google
-#       art:
-#         a: 
-#           - art
-#       blog:
-#         a: 
-#           - blog
-#     byother:
-#       a:
-#         - google
-#         - google-2
-#         - blog
-#         - art
-#   test:
-#     - art
-#   another:
-#     test2:
-#       - blog
-#     test3: 
-#       - nope
-
 folders:
-  folder 1:
-    - link-1
-    - name: Link 1
-      url: link-1
-  Folder 2:
+  general:
+    by name:
+      bookmarks:
+        - name: thing
+          url: link-2
+        - link-1
+      google:
+        a: 
+          - name: dev
+            url: link-3
+          - link-3
+        B: 
+          - link-2
+        c: 
+          - link-3
+      art:
+        a: 
+          - link-2
+      blog:
+        a: 
+          - link-1
+    by other:
+      a:
+        - link-1
+        - link-2
+        - lnk-3
+  test:
     - link-2
-    - name: Link 2
-      url: link-2
-  Folder 3:
-    - link-3
-    - name: Link 3
-      url: link-3
+  another:
+    test2:
+      - link-1
+    test3: 
+      - link-1
+
+# folders:
+#   folder 1:
+#     - link-1
+#     - name: Link 1
+#       url: link-1
+#   Folder 2:
+#     - link-2
+#     - name: Link 2
+#       url: link-2
+#   Folder 3:
+#     - link-3
+#     - name: Link 3
+#       url: link-3
