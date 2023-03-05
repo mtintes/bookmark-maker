@@ -26,5 +26,5 @@ jobs:
         run: |
           ls
           tar -xf bookmark-maker_0.2.0_linux_amd64.tar.gz
-          ls bookmark-maker
-          ./bookmark-maker/bookmark-maker help
+          ls
+          ./bookmark-maker help
