@@ -28,3 +28,4 @@ jobs:
           tar -xf bookmark-maker_0.2.0_linux_amd64.tar.gz
           ls
           ./bookmark-maker help
+          find ./folders -type f -name 'folders.yaml' | sed -r 's|/[^/]+$||' |sort |uniq
