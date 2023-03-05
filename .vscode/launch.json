@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}/src",
-            "args": ["build", "-i", "${workspaceFolder}/example-files/start.yaml", "-o", "${workspaceFolder}/output2.html"]
+            "args": ["build", "-i", "${workspaceFolder}/example-files/links.yaml", "-i", "${workspaceFolder}/example-files/folders.yaml", "-o", "${workspaceFolder}/output.html"]
         }
     ]
 }

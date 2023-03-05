@@ -7,7 +7,6 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/yosssi/gohtml"
 	"gopkg.in/yaml.v3"
 )
 
@@ -22,24 +21,24 @@ type Link struct {
 	Url  string
 }
 
-var globalLinks *[]Link
+var globalLinks []Link
 
-func BuildStructure(inputDirectory string, outputFile string) {
+func BuildStructure(inputDirectory []string, outputFile string) {
 
 	links, folders, _ := readInput(inputDirectory)
 
 	globalLinks = links
 
-	log.Println(links)
-	log.Println(folders)
+	//log.Println(links)
+	//log.Println(folders)
 
 	bookmarkFile := addHeader()
 
 	bookmarkFile = fmt.Sprintf("%s%s", bookmarkFile, filesToPaths(folders))
 
 	bookmarkFile += addFooter()
-	log.Println("paths")
-	log.Println(gohtml.Format(bookmarkFile))
+	//log.Println("paths")
+	//log.Println(gohtml.Format(bookmarkFile))
 
 	writefile := []byte(bookmarkFile)
 	err := os.WriteFile(outputFile, writefile, 0644)
@@ -48,82 +47,93 @@ func BuildStructure(inputDirectory string, outputFile string) {
 	}
 }
 
-func readInput(inputDirectory string) (*[]Link, map[string]interface{}, error) {
+func readInput(inputDirectory []string) ([]Link, map[string]interface{}, error) {
 
-	var inputFile InputFile
+	/////// MERGE 1 //////////
 
-	if strings.HasSuffix(inputDirectory, ".yaml") {
-		data, err := os.ReadFile(inputDirectory)
-		if err != nil {
-			log.Println("Bad File Read")
-			panic(err)
-		}
-		err = yaml.Unmarshal(data, &inputFile)
-		if err != nil {
-			log.Println("Bad Marshal")
-			panic(err)
+	var inputFiles []InputFile
+
+	for _, inputFilePath := range inputDirectory {
+		if strings.HasSuffix(inputFilePath, ".yaml") {
+			data, err := os.ReadFile(inputFilePath)
+			if err != nil {
+				log.Println("Bad File Read")
+				panic(err)
+			}
+			var inputFile InputFile
+			err = yaml.Unmarshal(data, &inputFile)
+			if err != nil {
+				log.Println("Bad Marshal")
+				panic(err)
+			}
+
+			inputFiles = append(inputFiles, inputFile)
 		}
 	}
 
+	inputFile := merge(inputFiles)
 	// log.Println(inputFile.Folders)
-	return &inputFile.Links, inputFile.Folders, nil
+	//return &inputFile.Links, inputFile.Folders, nil
+
+	// junk := InputFile{Links: []Link{}, Folders: nil}
+	return removeDuplicateLinks(inputFile.Links), inputFile.Folders, nil
 }
 
-func filesToPaths(folders map[string]interface{}) string {
-	var response string
-	// currentString = fmt.Sprintf("%s/%s", currentString, key)
-	for key, dir := range folders {
-		log.Println(reflect.TypeOf(dir))
+func merge(input []InputFile) InputFile {
+	var response InputFile
 
-		// log.Printf("current: %s", currentString)
-		// log.Printf("key: %s", key)
-		log.Println(reflect.TypeOf(dir))
+	//verify only one of each file
 
-		if key == "bookmarks" {
-			log.Println(dir)
-			response += generateBookmarks(dir.([]interface{}))
-			log.Println("It is a link")
-		} else if key == "name" {
-			log.Println("help")
-			//response += fmt.Sprintf("%s/%s", currentString, key)
-		} else if _, ok := dir.([]interface{}); ok {
-			response += fmt.Sprintf("<DT><H3 ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</H3>", key)
+	oneFolders := false
 
-			response += `
-			<DL><p>
-				`
-			// log.Println("file")
-			// log.Println(dir)
-			//currentString = fmt.Sprintf("%s/%s", currentString, dir)
+	for _, inputItem := range input {
+		if inputItem.Folders != nil && !oneFolders {
+			response.Folders = inputItem.Folders
+			oneFolders = true
+		}
 
-			response += generateBookmarks(dir.([]interface{}))
-			response += `
-			</DL><p>
-			`
-		} else if _, ok := dir.(map[string]interface{}); ok {
-			response += fmt.Sprintf("<DT><H3 ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</H3>", key)
-
-			response += `
-			<DL><p>
-				`
-			response += filesToPaths(dir.(map[string]interface{}))
-			response += `
-			</DL><p>
-			`
+		if inputItem.Links != nil {
+			response.Links = append(response.Links, inputItem.Links...)
 		}
 	}
 
 	return response
 }
 
-func individualPaths(dir []interface{}) string {
+func filesToPaths(folders map[string]interface{}) string {
 	var response string
+	// currentString = fmt.Sprintf("%s/%s", currentString, key)
+	for key, dir := range folders {
+		//log.Println(reflect.TypeOf(dir))
 
-	for _, data := range dir {
-		log.Println(reflect.TypeOf(data))
-		name, url := lookupLinkName(data.(string))
-		response += fmt.Sprintf("<DT><A HREF=\"%s\" ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</A>\n", url, name)
-		// response += fmt.Sprintf("%s/%s", key, data)
+		// log.Printf("current: %s", currentString)
+		// log.Printf("key: %s", key)
+		//log.Println(reflect.TypeOf(dir))
+
+		if key == "bookmarks" {
+			//log.Println(dir)
+			response += generateBookmarks(dir.([]interface{}))
+			//log.Println("It is a link")
+		} else if key == "name" {
+			//log.Println("help")
+			//response += fmt.Sprintf("%s/%s", currentString, key)
+		} else if _, ok := dir.([]interface{}); ok {
+			response += fmt.Sprintf("<DT><H3 ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</H3>\n", key)
+
+			response += "<DL><p>\n"
+			// log.Println("file")
+			// log.Println(dir)
+			//currentString = fmt.Sprintf("%s/%s", currentString, dir)
+
+			response += generateBookmarks(dir.([]interface{}))
+			response += "</DL><p>\n"
+		} else if _, ok := dir.(map[string]interface{}); ok {
+			response += fmt.Sprintf("<DT><H3 ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</H3>\n", key)
+
+			response += "<DL><p>\n"
+			response += filesToPaths(dir.(map[string]interface{}))
+			response += "</DL><p>\n"
+		}
 	}
 
 	return response
@@ -145,10 +155,7 @@ func addHeader() string {
 }
 
 func addFooter() string {
-	return `
-	</DL><p>
-	</DL><p>
-	`
+	return "</DL><p>\n</DL><p>\n"
 }
 
 func generateBookmarks(filesToBookmark []interface{}) string {
@@ -177,7 +184,7 @@ func generateBookmarks(filesToBookmark []interface{}) string {
 				}
 			}
 
-			response += fmt.Sprintf("<DT><A HREF=\"%s\" ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</A>", url, name)
+			response += fmt.Sprintf("<DT><A HREF=\"%s\" ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</A>\n", url, name)
 
 		}
 	}
@@ -188,10 +195,30 @@ func generateBookmarks(filesToBookmark []interface{}) string {
 func lookupLinkName(linkName string) (string, string) {
 	// log.Println("globalLinks", globalLinks)
 
-	for _, data := range *globalLinks {
+	for _, data := range globalLinks {
 		if linkName == data.Id {
 			return data.Name, data.Url
 		}
 	}
 	return "", ""
+}
+
+func removeDuplicateLinks(items []Link) []Link {
+	var outlinks []Link
+
+	for _, link := range items {
+		found := false
+		for _, outlink := range outlinks {
+			if link.Id == outlink.Id {
+				found = true
+				log.Fatalln("you have a duplicate link: ", link.Id)
+			}
+		}
+		if !found {
+			outlinks = append(outlinks, link)
+		}
+	}
+
+	return outlinks
+
 }

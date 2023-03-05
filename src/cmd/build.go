@@ -1,6 +1,5 @@
 /*
 Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -10,7 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Input, Output string
+var Inputs []string
+var Output string
 
 // buildCmd represents the build command
 var buildCmd = &cobra.Command{
@@ -18,7 +18,7 @@ var buildCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Long:  `Configure a bunch of links and a folder structure and this will build out the bookmarks for importing`,
 	Run: func(cmd *cobra.Command, args []string) {
-		actions.BuildStructure(Input, Output)
+		actions.BuildStructure(Inputs, Output)
 
 	},
 }
@@ -26,7 +26,7 @@ var buildCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(buildCmd)
 
-	buildCmd.Flags().StringVarP(&Input, "inputDirectory", "i", ".", "file or directory where input yaml is.")
+	buildCmd.Flags().StringArrayVarP(&Inputs, "inputDirectory", "i", []string{"."}, "file or directory where input yaml is.")
 	buildCmd.Flags().StringVarP(&Output, "outputDirectory", "o", "output.html", "root of output directories.")
 	// Here you will define your flags and configuration settings.
 
