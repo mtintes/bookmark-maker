@@ -24,4 +24,5 @@ jobs:
           tarBall: true
       - name: check
         run: |
+          tar -xf *.tar.gz
           ls
