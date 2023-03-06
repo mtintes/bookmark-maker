@@ -24,4 +24,4 @@ Then in your browser go into the bookmarks manager and import the new "output.ht
     url: the url for the bookmark link
     
 ##### folders.yaml
-  This is a little more complex, but you can write the folder structure however you want using YAML. You can see a really simple example [here](example-files/folders)
+  This is a little more complex, but you can write the folder structure however you want using YAML. You can see a really simple example [here](example-files/folders). You can find a more complex example with things like name overrides [here]()
