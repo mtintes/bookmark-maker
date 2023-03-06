@@ -35,5 +35,5 @@ jobs:
           do
             echo file: $file
             ./bookmark-maker build -i ./example-files/links.yaml -i "$file/folders.yaml" -o "$file/output.html"
-            ls $file
+            cat $file/output.html
           done
