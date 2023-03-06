@@ -15,3 +15,13 @@ You can also set up a file stucture demonstrated under the "[folders](folders/)"
 5. Run `bookmark-maker build -i example-files/links.yaml -i example-files/folders.yaml -o output.html`
 
 Then in your browser go into the bookmarks manager and import the new "output.html" file.
+
+#### File structure
+##### links.yaml
+  takes in a list of:
+    id: a unique identifier that will get used in pulling folder structure
+    name: a user friendly name for the bookmark link
+    url: the url for the bookmark link
+    
+##### folders.yaml
+  This is a little more complex, but you can write the folder structure however you want using YAML. You can see a really simple example [here](example-files/folders)
