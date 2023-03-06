@@ -28,8 +28,9 @@ jobs:
           tar -xf bookmark-maker_0.2.0_linux_amd64.tar.gz
           ls
           files=$(find ./folders -type f -name 'folders.yaml' | sed -r 's|/[^/]+$||' |sort |uniq)
-          for FILE in files
+          for file in files
           do
-            ./bookmark-maker build -i ./example-files/links.yaml -i "$FILE/folders.yaml" -o "$FILE/output.html"
-            ls $FILE
+            echo file: $file
+            ./bookmark-maker build -i ./example-files/links.yaml -i "$file/folders.yaml" -o "$file/output.html"
+            ls $file
           done
