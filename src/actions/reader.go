@@ -23,33 +23,33 @@ type Link struct {
 
 var globalLinks []Link
 
-func BuildStructure(inputDirectory []string, outputFile string) {
+func BuildStructure(inputDirectory []string, outputFile string, readmeOutputFile string) {
 
 	links, folders, _ := readInput(inputDirectory)
 
 	globalLinks = links
-
-	//log.Println(links)
-	//log.Println(folders)
 
 	bookmarkFile := addHeader()
 
 	bookmarkFile = fmt.Sprintf("%s%s", bookmarkFile, filesToPaths(folders))
 
 	bookmarkFile += addFooter()
-	//log.Println("paths")
-	//log.Println(gohtml.Format(bookmarkFile))
 
 	writefile := []byte(bookmarkFile)
 	err := os.WriteFile(outputFile, writefile, 0644)
 	if err != nil {
 		log.Println("We had trouble writing the file", err)
 	}
+
+	readme := BuildReadme(folders, 0)
+	writefile = []byte(readme)
+	err = os.WriteFile(readmeOutputFile, writefile, 0644)
+	if err != nil {
+		log.Println("We had trouble writing the file", err)
+	}
 }
 
 func readInput(inputDirectory []string) ([]Link, map[string]interface{}, error) {
-
-	/////// MERGE 1 //////////
 
 	var inputFiles []InputFile
 
@@ -72,17 +72,12 @@ func readInput(inputDirectory []string) ([]Link, map[string]interface{}, error) 
 	}
 
 	inputFile := merge(inputFiles)
-	// log.Println(inputFile.Folders)
-	//return &inputFile.Links, inputFile.Folders, nil
 
-	// junk := InputFile{Links: []Link{}, Folders: nil}
 	return removeDuplicateLinks(inputFile.Links), inputFile.Folders, nil
 }
 
 func merge(input []InputFile) InputFile {
 	var response InputFile
-
-	//verify only one of each file
 
 	oneFolders := false
 
@@ -102,28 +97,16 @@ func merge(input []InputFile) InputFile {
 
 func filesToPaths(folders map[string]interface{}) string {
 	var response string
-	// currentString = fmt.Sprintf("%s/%s", currentString, key)
-	for key, dir := range folders {
-		//log.Println(reflect.TypeOf(dir))
 
-		// log.Printf("current: %s", currentString)
-		// log.Printf("key: %s", key)
-		//log.Println(reflect.TypeOf(dir))
+	for key, dir := range folders {
 
 		if key == "bookmarks" {
-			//log.Println(dir)
 			response += generateBookmarks(dir.([]interface{}))
-			//log.Println("It is a link")
 		} else if key == "name" {
-			//log.Println("help")
-			//response += fmt.Sprintf("%s/%s", currentString, key)
 		} else if _, ok := dir.([]interface{}); ok {
 			response += fmt.Sprintf("<DT><H3 ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</H3>\n", key)
 
 			response += "<DL><p>\n"
-			// log.Println("file")
-			// log.Println(dir)
-			//currentString = fmt.Sprintf("%s/%s", currentString, dir)
 
 			response += generateBookmarks(dir.([]interface{}))
 			response += "</DL><p>\n"
@@ -161,22 +144,18 @@ func addFooter() string {
 func generateBookmarks(filesToBookmark []interface{}) string {
 	var response string
 
-	// log.Println("test", filesToBookmark)
-
 	for _, bookmark := range filesToBookmark {
-		// fmt.Println("typeof", reflect.TypeOf(bookmark))
 
 		if reflect.TypeOf(bookmark).Kind() == reflect.String {
-			// log.Println("Is String")
-			// log.Println(bookmark)
+
 			name, url := lookupLinkName(bookmark.(string))
 			response += fmt.Sprintf("<DT><A HREF=\"%s\" ADD_DATE=\"1677903092\" LAST_MODIFIED=\"1677903150\">%s</A>\n", url, name)
 		} else if reflect.TypeOf(bookmark).Kind() == reflect.Map {
-			// log.Println("is map string")
+
 			var name string
 			var url string
 			for key, value := range bookmark.(map[string]interface{}) {
-				// log.Println("here", key, value)
+
 				if key == "name" {
 					name = value.(string)
 				} else if key == "url" {
@@ -193,7 +172,6 @@ func generateBookmarks(filesToBookmark []interface{}) string {
 }
 
 func lookupLinkName(linkName string) (string, string) {
-	// log.Println("globalLinks", globalLinks)
 
 	for _, data := range globalLinks {
 		if linkName == data.Id {
@@ -221,4 +199,58 @@ func removeDuplicateLinks(items []Link) []Link {
 
 	return outlinks
 
+}
+
+func BuildReadme(folders map[string]interface{}, num int) string {
+	var response string
+
+	tabs := ""
+	for i := 0; i < num; i++ {
+		tabs += "\t"
+	}
+
+	for key, dir := range folders {
+		if key == "bookmarks" {
+			response += generateReadme(dir.([]interface{}), num)
+		} else if key == "name" {
+		} else if _, ok := dir.([]interface{}); ok {
+
+			response += fmt.Sprintf("%s* %s\n\n", tabs, key)
+			response += generateReadme(dir.([]interface{}), num+1)
+		} else if _, ok := dir.(map[string]interface{}); ok {
+			response += fmt.Sprintf("%s* %s\n\n", tabs, key)
+			response += BuildReadme(dir.(map[string]interface{}), num+1)
+		}
+	}
+
+	return response
+}
+
+func generateReadme(filesToBookmark []interface{}, num int) string {
+	var response string
+
+	tabs := ""
+	for i := 0; i < num; i++ {
+		tabs += "\t"
+	}
+
+	for _, bookmark := range filesToBookmark {
+		if reflect.TypeOf(bookmark).Kind() == reflect.String {
+			name, url := lookupLinkName(bookmark.(string))
+			response += fmt.Sprintf("%s* [%s](%s)\n\n", tabs, name, url)
+		} else if reflect.TypeOf(bookmark).Kind() == reflect.Map {
+			var name string
+			var url string
+			for key, value := range bookmark.(map[string]interface{}) {
+				if key == "name" {
+					name = value.(string)
+				} else if key == "url" {
+					_, url = lookupLinkName(value.(string))
+				}
+			}
+			response += fmt.Sprintf("%s* [%s](%s)\n\n", tabs, name, url)
+		}
+	}
+
+	return response
 }
