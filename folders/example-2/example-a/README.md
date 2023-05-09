@@ -1,14 +1,14 @@
-* test
+1. another
 
-	* [link-2](https://google.com/)
+	1. test2
 
-* another
+		1. [link-1](https://google.com/)
 
-	* test2
+	1. test3
 
-		* [link-1](https://google.com/)
+		1. [link-1](https://google.com/)
 
-	* test3
+1. test
 
-		* [link-1](https://google.com/)
+	1. [link-2](https://google.com/)
 
