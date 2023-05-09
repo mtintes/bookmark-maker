@@ -11,6 +11,7 @@ import (
 
 var Inputs []string
 var Output string
+var ReadmeOutput string
 
 // buildCmd represents the build command
 var buildCmd = &cobra.Command{
@@ -18,8 +19,7 @@ var buildCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Long:  `Configure a bunch of links and a folder structure and this will build out the bookmarks for importing`,
 	Run: func(cmd *cobra.Command, args []string) {
-		actions.BuildStructure(Inputs, Output)
-
+		actions.BuildStructure(Inputs, Output, ReadmeOutput)
 	},
 }
 
@@ -27,7 +27,8 @@ func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	buildCmd.Flags().StringArrayVarP(&Inputs, "inputDirectory", "i", []string{"."}, "file or directory where input yaml is.")
-	buildCmd.Flags().StringVarP(&Output, "outputDirectory", "o", "output.html", "root of output directories.")
+	buildCmd.Flags().StringVarP(&Output, "outputDirectory", "o", "output.html", "file of output directories.")
+	buildCmd.Flags().StringVarP(&ReadmeOutput, "readmeOutputDirectory", "r", "readme.md", "file of readme output")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
