@@ -215,10 +215,10 @@ func BuildReadme(folders map[string]interface{}, num int) string {
 		} else if key == "name" {
 		} else if _, ok := dir.([]interface{}); ok {
 
-			response += fmt.Sprintf("%s* %s\n\n", tabs, key)
+			response += fmt.Sprintf("%s1. %s\n\n", tabs, key)
 			response += generateReadme(dir.([]interface{}), num+1)
 		} else if _, ok := dir.(map[string]interface{}); ok {
-			response += fmt.Sprintf("%s* %s\n\n", tabs, key)
+			response += fmt.Sprintf("%s1. %s\n\n", tabs, key)
 			response += BuildReadme(dir.(map[string]interface{}), num+1)
 		}
 	}
@@ -237,7 +237,7 @@ func generateReadme(filesToBookmark []interface{}, num int) string {
 	for _, bookmark := range filesToBookmark {
 		if reflect.TypeOf(bookmark).Kind() == reflect.String {
 			name, url := lookupLinkName(bookmark.(string))
-			response += fmt.Sprintf("%s* [%s](%s)\n\n", tabs, name, url)
+			response += fmt.Sprintf("%s1. [%s](%s)\n\n", tabs, name, url)
 		} else if reflect.TypeOf(bookmark).Kind() == reflect.Map {
 			var name string
 			var url string
@@ -248,7 +248,7 @@ func generateReadme(filesToBookmark []interface{}, num int) string {
 					_, url = lookupLinkName(value.(string))
 				}
 			}
-			response += fmt.Sprintf("%s* [%s](%s)\n\n", tabs, name, url)
+			response += fmt.Sprintf("%s1. [%s](%s)\n\n", tabs, name, url)
 		}
 	}
 
