@@ -20,12 +20,12 @@ jobs:
         with:
           repository: "mtintes/bookmark-maker"
           latest: true
-          fileName: "bookmark-maker_0.2.0_linux_amd64.tar.gz"
+          fileName: "bookmark-maker_0.3.0_linux_amd64.tar.gz"
           tarBall: true
       - name: check
         run: |
           ls
-          tar -xf bookmark-maker_0.2.0_linux_amd64.tar.gz
+          tar -xf bookmark-maker_0.3.0_linux_amd64.tar.gz
           ls
           files=$(find ./folders -type f -name 'folders.yaml' | sed -r 's|/[^/]+$||' |sort |uniq)
           
